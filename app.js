@@ -16,4 +16,5 @@ app.post('/api/ujet/sign', (req, res) => {
     res.json({ token: token });
 });
 
-app.listen(3000, console.log('app is running on port 3000'))
+const runningPort = process.env.PORT || 3000;
+app.listen(runningPort, console.log(`app is running on port ${runningPort}`))
