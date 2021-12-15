@@ -8,12 +8,17 @@ app.use(cors());
 app.use(express.json());
 
 function generateAccessToken(payload) {
-    return jwt.sign(payload, process.env.UJET_SECRET, { expiresIn: '600s' });
+    return jwt.sign(payload, process.env.UJET_SECRET, { algorithm: 'HS256' });
 }
 
-app.post('/api/ujet/sign', (req, res) => {
-    const token = generateAccessToken({ payload: req.body.payload });
-    res.json({ token: token });
+app.post('/auth/token', function (req, res) {
+    const payload = req.body.payload
+    payload['iss'] = 'UNORO'
+    const iat = parseInt(Date.now() / 1000, 10)
+    payload['iat'] = iat
+    payload['exp'] = iat + 600
+    const token = generateAccessToken(payload);
+    res.json({ token })
 });
 
 const runningPort = process.env.PORT || 3000;
